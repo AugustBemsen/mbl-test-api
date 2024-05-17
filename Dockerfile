@@ -16,7 +16,7 @@ COPY package.json ./
 RUN yarn config set unsafe-perm true
 
 # Install dependencies using yarn
-RUN yarn install --frozen-lockfile --no-cache
+RUN yarn install --no-cache
 
 # Copy the rest of the application code to the working directory
 COPY ./ .
