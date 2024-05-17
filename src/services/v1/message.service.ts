@@ -92,9 +92,21 @@ class UserService {
         const user = await UserModel.findOne({ _id: data.$currentUser._id });
         if (!user) throw new CustomError("user not found", 404);
 
+        // get user messages count
+        const messagesCount = await MessageModel.countDocuments({ recipient: user._id });
+
+        // get  unread Messages Count
+
+        const unReadCount = await MessageModel.countDocuments({ recipient: user._id, isRead: false });
+
         // query for message by id and return result
 
-        return await MessageModel.find({ recipient: user._id }).populate("sender", "first_name last_name image");
+        const messages = await MessageModel.find({ recipient: user._id }).populate("sender", "first_name last_name image");
+        return {
+            ...messages,
+            messagesCount,
+            unReadCount,
+        };
     }
 }
 
