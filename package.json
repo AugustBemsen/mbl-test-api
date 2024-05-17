@@ -5,8 +5,8 @@
     "author": "Daniel Bemsen <danireptor7@gmail.com>",
     "scripts": {
         "postinstall": "patch-package",
-        "build": "npx tsc && tsc-alias",
         "start": "yarn build && node dist/src/index.js",
+        "build": "yarn add typescript && npx tsc && tsc-alias",
         "dev": "nodemon --ext 'ts, tsx, json' --watch src --exec ts-node -r tsconfig-paths/register src/index.ts",
         "lint": "eslint src/**/*.{ts,tsx}",
         "run:script": "ts-node -r tsconfig-paths/register --script-mode"
