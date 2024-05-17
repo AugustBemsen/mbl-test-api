@@ -11,9 +11,9 @@ class UserService {
         // Validate data
         const { error, value: data } = Joi.object({
             body: Joi.object({
-                subject: Joi.string().trim().required(),
-                content: Joi.string().trim().required(),
-                recipient: Joi.string().trim().required(),
+                subject: Joi.string().trim().required().label("Subject"),
+                content: Joi.string().trim().required().label("Content"),
+                recipient: Joi.string().trim().required().label("Recipient"),
             }),
             $currentUser: Joi.object({
                 _id: Joi.required(),
@@ -26,6 +26,13 @@ class UserService {
         // Check if user exists
         const user = await UserModel.findOne({ _id: data.$currentUser._id });
         if (!user) throw new CustomError("user not found", 404);
+
+        // validate recipient
+        const recipient = await UserModel.findOne({ _id: data.body.recipient });
+        if (!recipient) throw new CustomError("recipient not found", 404);
+
+        // prevent sender from being recipient
+        if (user._id.toString() === recipient._id.toString()) throw new CustomError("Sorry, you can't send to self", 404);
 
         const payload = {
             subject: data.body.subject,
