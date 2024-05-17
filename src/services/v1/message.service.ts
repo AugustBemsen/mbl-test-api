@@ -47,6 +47,55 @@ class UserService {
 
         return message;
     }
+
+    // get user messages
+
+    async openMessage({ $currentUser, params }: Partial<Request>) {
+        // Validate data
+        const { error, value: data } = Joi.object({
+            params: Joi.object({
+                messageId: Joi.string().trim().required().label("Message Id"),
+            }),
+            $currentUser: Joi.object({
+                _id: Joi.required(),
+            }),
+        })
+            .options({ stripUnknown: true })
+            .validate({ params, $currentUser });
+        if (error) throw new CustomError(error.message, 400);
+
+        // Check if user exists
+        const user = await UserModel.findOne({ _id: data.$currentUser._id });
+        if (!user) throw new CustomError("user not found", 404);
+
+        // Query for message by id and update isRead to true
+        const message = await MessageModel.findOneAndUpdate({ _id: data.params.messageId, recipient: user._id }, { isRead: true }, { new: true });
+        if (!message) throw new CustomError("Message not found or you are not the recipient", 404);
+
+        return message;
+    }
+
+    // get user message
+
+    async getUserMessages({ $currentUser }: Partial<Request>) {
+        // Validate data
+        const { error, value: data } = Joi.object({
+            $currentUser: Joi.object({
+                _id: Joi.required(),
+            }),
+        })
+            .options({ stripUnknown: true })
+            .validate({ $currentUser });
+        if (error) throw new CustomError(error.message, 400);
+
+        // Check if user exists
+        const user = await UserModel.findOne({ _id: data.$currentUser._id });
+        if (!user) throw new CustomError("user not found", 404);
+
+        // query for message by id and return result
+
+        return await MessageModel.find({ recipient: user._id }).populate("sender", "first_name last_name image");
+    }
 }
 
 export default new UserService();

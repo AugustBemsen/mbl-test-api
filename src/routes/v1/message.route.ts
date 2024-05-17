@@ -7,4 +7,8 @@ const router: Router = Router();
 
 router.post("/send-message", authGuard(CONFIGS.APP_ROLES.USER), messageController.sendMessage);
 
+router.get("/open-message/:messageId", authGuard(CONFIGS.APP_ROLES.USER), messageController.openMessage);
+
+router.get("/user-messages", authGuard(CONFIGS.APP_ROLES.USER), messageController.userMessages);
+
 export default router;
