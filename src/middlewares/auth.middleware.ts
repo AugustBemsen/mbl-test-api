@@ -29,10 +29,10 @@ function auth(roles: string[] = []) {
         if (!user) throw new CustomError("-middleware/user-not-found", 401);
 
         // user is deactivated
-        if (user.account_disabled) throw new CustomError("-middleware/user-deactivated", 401);
+        if (user.account_disabled) throw new CustomError("-middleware/user-deactivated", 403);
 
         // If email address is not verified
-        if (!user.email_verified) throw new CustomError("-middleware/user-email-not-verified", 401);
+        if (!user.email_verified) throw new CustomError("-middleware/user-email-not-verified", 402);
 
         // If role is not authorized to access route
         if (!roles.includes(user.role)) throw new CustomError("-middleware/user-not-authorized", 401);

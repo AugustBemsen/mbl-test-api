@@ -5,6 +5,8 @@ import { Router } from "express";
 
 const router: Router = Router();
 
-router.patch("/get-user", authGuard(CONFIGS.APP_ROLES.USER), userController.getUser);
+router.get("/current-user", authGuard(CONFIGS.APP_ROLES.USER), userController.getCurrentUser);
+
+router.get("/get-all-users", userController.getAllUsers);
 
 export default router;

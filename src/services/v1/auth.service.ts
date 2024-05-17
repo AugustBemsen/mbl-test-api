@@ -33,6 +33,9 @@ class AuthService {
             email: data.body.email,
             password: passwordHash,
             image: data.body.image,
+
+            // for this app, set user verified as default
+            email_verified: true,
         };
 
         // Create new user
