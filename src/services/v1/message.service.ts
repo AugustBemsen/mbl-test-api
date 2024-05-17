@@ -103,7 +103,7 @@ class UserService {
 
         const messages = await MessageModel.find({ recipient: user._id }).populate("sender", "first_name last_name image");
         return {
-            ...messages,
+            messages,
             messagesCount,
             unReadCount,
         };
